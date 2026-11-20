@@ -1,0 +1,18 @@
+const products=[
+{name:"Sculpted ceramic vase",category:"home",price:38,image:"https://images.unsplash.com/photo-1578500494198-246f612d3b3d?auto=format&fit=crop&w=800&q=80",tag:"Bestseller"},
+{name:"Everyday timepiece",category:"accessories",price:74,image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",tag:"New"},
+{name:"Soft knit throw",category:"home",price:56,image:"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",tag:""},
+{name:"Classic street sneaker",category:"style",price:89,image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",tag:"Popular"},
+{name:"Minimal leather bag",category:"style",price:95,image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80",tag:""},
+{name:"Desk notes set",category:"accessories",price:18,image:"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80",tag:""}
+];
+const money=n=>'$'+n.toFixed(2);
+function productCard(p){return `<div class="col-6 col-lg-4 product-item" data-category="${p.category}"><article class="product-card"><div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div><div class="product-info"><p>${p.tag||'NOVA selection'}</p><h3>${p.name}</h3><div class="d-flex justify-content-between align-items-center"><span class="product-price">${money(p.price)}</span><button class="add-btn" data-add="${p.name}">Add to bag +</button></div></div></article></div>`}
+const featured=document.getElementById('featuredProducts');if(featured)featured.innerHTML=products.slice(0,3).map(productCard).join('');
+const shop=document.getElementById('shopProducts');if(shop){shop.innerHTML=products.map(productCard).join('');document.getElementById('productCount').textContent=products.length+' products';}
+function updateCart(){let count=Number(localStorage.getItem('novaCartCount')||0);document.querySelectorAll('#cartCount').forEach(el=>el.textContent=count)}
+document.addEventListener('click',e=>{const btn=e.target.closest('[data-add]');if(btn){let count=Number(localStorage.getItem('novaCartCount')||0)+1;localStorage.setItem('novaCartCount',count);updateCart();const old=btn.textContent;btn.textContent='Added ✓';setTimeout(()=>btn.textContent=old,1000)}});
+updateCart();
+document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');let filter=btn.dataset.filter;let visible=0;document.querySelectorAll('.product-item').forEach(item=>{let show=filter==='all'||item.dataset.category===filter;item.classList.toggle('d-none',!show);if(show)visible++});let count=document.getElementById('productCount');if(count)count.textContent=visible+' products'}));
+const newsletter=document.getElementById('newsletterForm');if(newsletter)newsletter.addEventListener('submit',e=>{e.preventDefault();document.getElementById('newsletterMsg').textContent='Thanks for subscribing! Connect a mailing service to collect signups.';newsletter.reset()});
+const contact=document.getElementById('contactForm');if(contact)contact.addEventListener('submit',e=>{e.preventDefault();document.getElementById('contactMsg').textContent='Thanks! This demo form is ready for backend or email-service integration.';contact.reset()});
